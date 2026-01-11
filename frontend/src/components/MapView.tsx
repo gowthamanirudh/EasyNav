@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import VoiceInput from './VoiceInput';
 
 interface Route {
   type: string;
@@ -105,49 +106,59 @@ export default function MapView() {
     setLoading(false);
   };
 
+  const handleVoiceDestination = (destination: string, nodeId: number) => {
+    fetchRoute(1, nodeId); // Always route from node 1 (Central Chennai)
+  };
+
   return (
-    <div className="flex flex-col h-screen gap-4 p-4">
+    <div className="flex flex-col h-screen gap-4 p-4 bg-gray-50">
+      {/* Voice Input Component */}
+      <VoiceInput onDestination={handleVoiceDestination} />
+
+      {/* Manual Route Buttons */}
       <div className="flex gap-2 flex-wrap">
         <button
           onClick={() => fetchRoute(1, 2)}
           disabled={loading}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 transition"
         >
           1 → 2 (Marina)
         </button>
         <button
           onClick={() => fetchRoute(2, 3)}
           disabled={loading}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 transition"
         >
           2 → 3 (Anna Uni)
         </button>
         <button
           onClick={() => fetchRoute(1, 3)}
           disabled={loading}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 transition"
         >
           1 → 3 (Direct)
         </button>
         <button
           onClick={() => fetchRoute(3, 4)}
           disabled={loading}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 transition"
         >
           3 → 4 (Guindy)
         </button>
       </div>
 
+      {/* Map Container */}
       <div
         ref={mapRef}
         className="flex-1 rounded-lg shadow-lg"
         style={{ minHeight: '500px' }}
       />
 
+      {/* Route Status */}
       {route && (
-        <div className="p-4 bg-gray-100 rounded">
-          <p className="text-sm">
-            Route found with {route.features.length} segment(s)
+        <div className="p-4 bg-green-100 border border-green-400 rounded text-green-800">
+          <p className="text-sm font-semibold">
+            ✅ Route found with {route.features.length} segment(s)
           </p>
         </div>
       )}
